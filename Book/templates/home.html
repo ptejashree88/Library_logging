@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+    <head>
+      <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Library</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    </head>
+    <body>
+
+        <div  class="container col-8" style="border: solid; border-color: rgb(235, 239, 243);">
+          <h1 style="text-align: center; color: rgb(8, 112, 39);">Enter Book Details</h1>
+          <hr style="background-color: rgb(221, 19, 144);">
+          <form action="/save_book/" method="post">
+            {% csrf_token %}
+            {% if book %}
+            <div class="row">
+              <div class="col-12" style="padding-top: 10px;">
+                Book Id :
+              <input type="text" class="form-control" placeholder="Book Id" name="id" value="{{book.id}}" readonly>
+              </div>
+          </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-12" style="padding-top: 10px;">
+                  Book Name :
+                <input type="text" class="form-control" placeholder="Book Name" name="name" value="{{book.name}}"required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" style="padding-top: 10px;">
+                  Author Name:
+                <input type="text" class="form-control" placeholder="Author Name" name="author" value="{{book.author}}"required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" style="padding-top: 10px;">
+                  Quantity of Book:
+                <input type="text" class="form-control" placeholder="Quantity of Book" name="qty" value="{{book.qty}}"required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" style="padding-top: 10px;">
+                  Price of Book:
+                <input type="text" class="form-control" placeholder="Price of Book" name="price" value="{{book.price}}" required>
+                </div>
+            </div>
+                {% if book.is_publish %}
+                <div style="padding-top: 10px;">
+                  <label class="switch">
+                    Book Published:
+                    <input type="checkbox" name="pub" checked>
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                {% else %}
+                <div style="padding-top: 10px;">
+                  <label class="switch">
+                    Book Published:
+                    <input type="checkbox" name="pub">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                {% endif %}
+      
+              {% if book %}
+              <div class="col-12" style="padding-top: 10px;">
+                <button type="submit" class="btn btn-primary">Update Book</button>
+              </div>
+              {% else %}
+              <div class="col-12" style="padding-top: 10px;">
+                <button type="submit" class="btn btn-primary">Submit Book</button>
+              </div>
+              {% endif %}
+            </form>
+        </div>
+        <div class="container col-8" style="padding-top: 20px;  border: solid; border-color: rgb(226, 229, 233); text-align: center;">
+          <div class="container col-3">
+          <h3 style="padding-top: 10px; color: rgb(22, 134, 41);">Books Available</h3>
+          </div>
+          <hr style="background-color: rgb(179, 10, 103);">
+          <div class="row" style="padding-top: 10px;">
+          <div class="col-3" style="padding-top: 10px;">
+            <a href="/show_deleted/"> Show Deleted Data</a>
+          </div>
+          <div class="col-3" style="padding-top: 10px;">
+            <a href="/restore_all/"> Restore All Data</a>
+          </div>
+          <div class="col-3" style="padding-top: 10px;">
+           <a href="/delete_all/"> Delete All Data</a>
+          </div>
+          <div class="col-3" style="padding-top: 10px;">
+            <a href="/home/"> Home</a>
+          </div>
+          </div>
+          <div class="container col-8" style="padding-top: 10px; text-align: center;">
+        <table class="float-lg table table-bordered"style="text-align: center;">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Book Name</th>
+              <th scope="col">Author Name</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Is_Published</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for b in books %}
+              <th scope="row">{{b.id}}</th>
+              <td>{{b.name}}</td>
+              <td>{{b.author}}</td>
+              <td>{{b.qty}}</td>
+              <td>{{b.price}}</td>
+              <td>{{b.is_publish}}</td>
+              <td>{% ifequal b.is_deleted 'Y'  %}
+                <a href="/hard_delete/{{b.id}}/" class="btn btn-danger" role="button">Hard Delete</a> |
+                <a href="/restore/{{b.id}}/" >Restore</a> 
+                {% endifequal  %}
+                {% ifequal b.is_deleted 'N'  %}
+                <a href="/delete/{{b.id}}/" >Soft Delete</a> |
+                <a href="/edit/{{b.id}}">Edit</a> 
+                {% endifequal  %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+      </body>
+</html>
